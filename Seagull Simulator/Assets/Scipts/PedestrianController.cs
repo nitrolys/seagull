@@ -33,7 +33,6 @@ public class Pedestrian : MonoBehaviour
     {
         if (hostile)
         {
-            CancelInvoke("RandomWalk");
             Chase();
         }
     }
@@ -61,6 +60,7 @@ public class Pedestrian : MonoBehaviour
 
     private void SetHostile()
     {
+        CancelInvoke("RandomWalk");
         hostile = true;
     }
 
