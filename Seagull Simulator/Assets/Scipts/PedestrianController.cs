@@ -18,6 +18,7 @@ public class Pedestrian : MonoBehaviour
     private void Start()
     {
         hasFries = true;
+        hostile = false;
         holdPoint = gameObject.transform.Find("HoldPoint").gameObject;
     }
 
@@ -36,7 +37,7 @@ public class Pedestrian : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && hasFries)
+        if (other.gameObject == player && hasFries)
         {
             FriesStolen();
         }
