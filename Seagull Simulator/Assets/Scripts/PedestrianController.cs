@@ -29,7 +29,7 @@ public class PedestrianController : MonoBehaviour
     private void Awake()
     {
         hostile = false;
-        player = GameObject.Find("Player");
+        player = GameObject.Find("Seagull");
         holdPoint = gameObject.transform.Find("HoldPoint").gameObject;
         float waitTime = UnityEngine.Random.Range(minWaitTime, maxWaitTime);
         Invoke("RandomWalk", waitTime);
