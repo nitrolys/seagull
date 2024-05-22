@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
 
-public class Pedestrian : MonoBehaviour
+public class PedestrianController : MonoBehaviour
 {
     public NavMeshAgent agent;
     public GameObject crumbs;
@@ -20,21 +20,24 @@ public class Pedestrian : MonoBehaviour
     private float maxWaitTime = 8f;
     private GameObject holdPoint;
 
-    private void Start()
+    public void SetHasFries(bool hasFries)
     {
-        hasFries = true;
+        this.hasFries = hasFries;
+        holdPoint.SetActive(hasFries);
+    }
+
+    private void Awake()
+    {
         hostile = false;
         player = GameObject.Find("Player");
         holdPoint = gameObject.transform.Find("HoldPoint").gameObject;
-        RandomWalk();
+        float waitTime = UnityEngine.Random.Range(minWaitTime, maxWaitTime);
+        Invoke("RandomWalk", waitTime);
     }
 
     private void Update()
     {
-        if (hostile)
-        {
-            Chase();
-        }
+
     }
 
     private void Chase()
@@ -46,22 +49,18 @@ public class Pedestrian : MonoBehaviour
     {
         if (other.gameObject == player && hasFries)
         {
-            FriesStolen();
+            SetHasFries(false);
+            Instantiate(crumbs, holdPoint.transform.position, holdPoint.transform.rotation);
+            SetHostile();
         }
-    }
-
-    private void FriesStolen()
-    {
-        holdPoint.SetActive(false);
-        Instantiate(crumbs, holdPoint.transform.position, holdPoint.transform.rotation);
-        hasFries = false;
-        Invoke("SetHostile", 1.0f);
     }
 
     private void SetHostile()
     {
         CancelInvoke("RandomWalk");
+        agent.SetDestination(transform.position);
         hostile = true;
+        InvokeRepeating("Chase", 1.0f, 0.2f);
     }
 
     private void RandomWalk()
