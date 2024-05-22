@@ -19,6 +19,7 @@ public class PedestrianController : MonoBehaviour
     private float minWaitTime = 2f;
     private float maxWaitTime = 8f;
     private GameObject holdPoint;
+    private GameObject AlertIcon;
 
     public void SetHasFries(bool hasFries)
     {
@@ -31,6 +32,8 @@ public class PedestrianController : MonoBehaviour
         hostile = false;
         player = GameObject.Find("Player");
         holdPoint = gameObject.transform.Find("HoldPoint").gameObject;
+        AlertIcon = gameObject.transform.Find("AlertIcon").gameObject;
+        AlertIcon.SetActive(false);
         float waitTime = UnityEngine.Random.Range(minWaitTime, maxWaitTime);
         Invoke("RandomWalk", waitTime);
     }
@@ -60,6 +63,7 @@ public class PedestrianController : MonoBehaviour
         CancelInvoke("RandomWalk");
         agent.SetDestination(transform.position);
         hostile = true;
+        StartCoroutine(FlashIcon());
         InvokeRepeating("Chase", 1.0f, 0.2f);
     }
 
@@ -71,5 +75,12 @@ public class PedestrianController : MonoBehaviour
         agent.SetDestination(dest);
         float waitTime = UnityEngine.Random.Range(minWaitTime, maxWaitTime);
         Invoke("RandomWalk", waitTime);
+    }
+
+    private IEnumerator FlashIcon()
+    {
+        AlertIcon.SetActive(true);
+        yield return new WaitForSeconds(1);
+        AlertIcon.SetActive(false);
     }
 }

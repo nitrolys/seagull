@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class SelfDestructor : MonoBehaviour
 {
+    public float lifeTime;
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         StartCoroutine(SelfDestruct());
     }
 
-    IEnumerator SelfDestruct()
+    private IEnumerator SelfDestruct()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(lifeTime);
         Destroy(gameObject);
     }
 }
