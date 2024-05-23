@@ -49,7 +49,7 @@ public class SeagullController : MonoBehaviour
         inSky = false;
         health = 100f;
         wantedLevel = 0f;
-        flightCDMax = 10;
+        flightCDMax = 5;
         flightCD = flightCDMax;
     }
 
@@ -102,12 +102,13 @@ public class SeagullController : MonoBehaviour
         if (inSky) {
             StartCoroutine(descend());
             StartCoroutine(flightCDTimer());
+            inSky = false;
         }
         else if (flightCD >= flightCDMax) {
             StartCoroutine(takeFlight());
             flightCD = 0;
+            inSky = true;
         }
-        inSky = !inSky;
     }
 
     private IEnumerator flightCDTimer()

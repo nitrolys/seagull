@@ -62,7 +62,7 @@ public class PedestrianController : MonoBehaviour
         }
         if (hostile && canAttack && Vector3.Magnitude(transform.position - seagull.transform.position) < attackRange)
         {
-            seagullController.TakeDamage(10);
+            seagullController.TakeDamage(30);
         }
     }
 

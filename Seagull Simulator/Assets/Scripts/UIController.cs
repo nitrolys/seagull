@@ -22,7 +22,7 @@ public class UIController : MonoBehaviour
     void Update()
     {
         healthFill.fillAmount = seagullController.getHealth() / 100;
-        CDFill.fillAmount = seagullController.getFlightCD() / 10;
+        CDFill.fillAmount = seagullController.getFlightCD() / 5;
         wantedDisplay.text = "Wanted level: " + seagullController.getWantedLevel();
     }
 }
