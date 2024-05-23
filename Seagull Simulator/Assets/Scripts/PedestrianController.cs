@@ -13,7 +13,8 @@ public class PedestrianController : MonoBehaviour
 
     public float walk_Range = 3f;
 
-    private GameObject player;
+    private GameObject seagull;
+    private SeagullController seagullController;
     private bool hasFries;
     private bool hostile;
     private float minWaitTime = 2f;
@@ -29,7 +30,8 @@ public class PedestrianController : MonoBehaviour
     private void Awake()
     {
         hostile = false;
-        player = GameObject.Find("Seagull");
+        seagull = GameObject.Find("Seagull");
+        seagullController = seagull.GetComponent<SeagullController>();
         holdPoint = gameObject.transform.Find("HoldPoint").gameObject;
         float waitTime = UnityEngine.Random.Range(minWaitTime, maxWaitTime);
         Invoke("RandomWalk", waitTime);
@@ -42,12 +44,12 @@ public class PedestrianController : MonoBehaviour
 
     private void Chase()
     {
-        agent.SetDestination(player.transform.position);
+        agent.SetDestination(seagull.transform.position);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == player && hasFries)
+        if (other.gameObject == seagull && hasFries)
         {
             SetHasFries(false);
             Instantiate(crumbs, holdPoint.transform.position, holdPoint.transform.rotation);

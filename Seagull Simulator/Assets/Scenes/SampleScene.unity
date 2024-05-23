@@ -132,8 +132,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -4822123770597495997, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
-      propertyPath: m_IsTrigger
+      propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4822123770597495997, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4822123770597495997, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
+      propertyPath: m_ProvidesContacts
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5671637318396879657, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
       propertyPath: m_Name
@@ -145,11 +153,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5671637318396879658, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5671637318396879658, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.72
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5671637318396879658, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -179,7 +187,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 5671637318396879660, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: -4822123770597495997, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -566,7 +579,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae75e1443c3fd4b94a30ce1ca6e4dbba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seagull: {fileID: 1761466311}
+  speed: 2.5
+  rb: {fileID: 1761466318}
 --- !u!114 &1761466313
 MonoBehaviour:
   m_ObjectHideFlags: 0
