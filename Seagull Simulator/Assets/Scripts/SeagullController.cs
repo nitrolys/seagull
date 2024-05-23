@@ -1,26 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class SeagullController : MonoBehaviour
 {
-    public GameObject seagull;
+    public float speed;
+
+    public Rigidbody rb;
     private Animator animator;
     private bool inSky;
     private float health;
     private float wantedLevel;
-    private float speed;
     private float movementX;
     private float movementY;
     private float movementZ;
-    // Start is called before the first frame update
+    private Vector3 direction;
+
+    public bool getInSky()
+    {
+        return inSky;
+    }
+
     void Start() {
-        animator = seagull.GetComponent<Animator>();
-        inSky = true;
+        animator = gameObject.GetComponent<Animator>();
+        rb = gameObject.GetComponent<Rigidbody>();
+        inSky = false;
         health = 100f;
         wantedLevel = 0f;
-        speed = 2.5f;
     }
 
     // Update is called once per frame
@@ -33,13 +41,17 @@ public class SeagullController : MonoBehaviour
     void changeAnimation() {
         if (inSky) {
             animator.Play("Fly");
-        } else {
+        } else if (movementX != 0 || movementY != 0) {
             animator.Play("Walk");
+        } else
+        {
+            animator.Play("Idle_A");
         }
     }
 
     void changePosition() {
         transform.position += speed * new Vector3(movementX, 0, movementY) * Time.deltaTime;
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     void changeStat() {
@@ -58,22 +70,46 @@ public class SeagullController : MonoBehaviour
 
         movementX = movementVector.x;
         movementY = movementVector.y;
+        if (movementX != 0 || movementY != 0)
+        {
+            direction.x = movementX;
+            direction.z = movementY;
+        }
     }
 
     void OnFly(InputValue movementValue) {
         if (inSky) {
-            movementZ = -2;
+            StartCoroutine(descend());
         }
         else {
-            movementZ = 2;
+            StartCoroutine(takeFlight());
         }
-        transform.Translate(0, movementZ, 0, null);
         inSky = !inSky;
     }
 
-    // private void OnTriggerEnter(Collider other) {
-    //     if (other.gameObject == player && hasFries) {
+    private IEnumerator takeFlight()
+    {
+        rb.useGravity = false;
+        while (transform.position.y < 2)
+        {
+            transform.position += new Vector3(0, 10, 0) * Time.deltaTime;
+            yield return null;
+        }
+    }
 
-    //     }
-    // }
+    private IEnumerator descend()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(origin : transform.position, direction : Vector3.down, hitInfo: out hit))
+        {
+            float targetY = hit.point.y + 0.2f;
+            while (transform.position.y > targetY)
+            {
+                transform.position -= new Vector3(0, 10, 0) * Time.deltaTime;
+                yield return null;
+            }
+
+        }
+        rb.useGravity = true;
+    }
 }
