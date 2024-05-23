@@ -14,6 +14,7 @@ public class SeagullController : MonoBehaviour
     private float movementX;
     private float movementY;
     private float movementZ;
+    private Vector3 direction;
     // Start is called before the first frame update
     void Start() {
         animator = seagull.GetComponent<Animator>();
@@ -33,13 +34,17 @@ public class SeagullController : MonoBehaviour
     void changeAnimation() {
         if (inSky) {
             animator.Play("Fly");
-        } else {
+        } else if (movementX != 0 || movementY != 0) {
             animator.Play("Walk");
+        } else
+        {
+            animator.Play("Idle_A");
         }
     }
 
     void changePosition() {
         transform.position += speed * new Vector3(movementX, 0, movementY) * Time.deltaTime;
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     void changeStat() {
@@ -58,6 +63,11 @@ public class SeagullController : MonoBehaviour
 
         movementX = movementVector.x;
         movementY = movementVector.y;
+        if (movementX != 0 || movementY != 0)
+        {
+            direction.x = movementX;
+            direction.z = movementY;
+        }
     }
 
     void OnFly(InputValue movementValue) {
