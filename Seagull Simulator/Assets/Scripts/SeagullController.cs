@@ -38,6 +38,11 @@ public class SeagullController : MonoBehaviour
         return flightCD;
     }
 
+    public int getWantedLevel()
+    {
+        return Mathf.FloorToInt(wantedLevel);
+    }
+
     void Start() {
         animator = gameObject.GetComponent<Animator>();
         rb = gameObject.GetComponent<Rigidbody>();
@@ -72,8 +77,7 @@ public class SeagullController : MonoBehaviour
     }
 
     void changeStat() {
-        health = Mathf.Max(0, health - Time.deltaTime * (float) 5);
-        wantedLevel -= Time.deltaTime * (float) 5;
+        IncrementHealth(-Time.deltaTime * 2);
 
         if (health <= 0)
         {
@@ -144,6 +148,11 @@ public class SeagullController : MonoBehaviour
     public void IncrementHealth(float increment)
     {
         health = Mathf.Clamp(health + increment, 0, 100);
+    }
+
+    public void IncrementWanted(float increment)
+    {
+        wantedLevel = Mathf.Clamp(wantedLevel + increment, 0, 5);
     }
 
     public void TakeDamage(float damage)

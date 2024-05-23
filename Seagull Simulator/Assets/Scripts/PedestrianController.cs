@@ -20,10 +20,13 @@ public class PedestrianController : MonoBehaviour
     private bool hostile;
     private bool canAttack = true;
 
+    private int threshold;
+
     private float minWaitTime = 2f;
     private float maxWaitTime = 8f;
     private GameObject holdPoint;
     private GameObject AlertIcon;
+    private GameObject HostileIcon;
 
     public bool getHasFries()
     {
@@ -39,17 +42,24 @@ public class PedestrianController : MonoBehaviour
     private void Awake()
     {
         hostile = false;
+        threshold = UnityEngine.Random.Range(1, 5);
         seagull = GameObject.Find("Seagull");
         seagullController = seagull.GetComponent<SeagullController>();
         holdPoint = gameObject.transform.Find("HoldPoint").gameObject;
         AlertIcon = gameObject.transform.Find("AlertIcon").gameObject;
         AlertIcon.SetActive(false);
+        HostileIcon = gameObject.transform.Find("HostileIcon").gameObject;
+        HostileIcon.SetActive(false);
         float waitTime = UnityEngine.Random.Range(minWaitTime, maxWaitTime);
         Invoke("RandomWalk", waitTime);
     }
 
     private void Update()
     {
+        if (!hostile && !hasFries && seagullController.getWantedLevel() >= threshold)
+        {
+            StartCoroutine(angered());
+        }
         if (hostile && canAttack && Vector3.Magnitude(transform.position - seagull.transform.position) < attackRange)
         {
             seagullController.TakeDamage(10);
@@ -65,10 +75,10 @@ public class PedestrianController : MonoBehaviour
     {
         if (other.gameObject == seagull)
         {
-            Debug.Log("collided");
             if (hasFries)
             {
                 seagullController.IncrementHealth(20);
+                seagullController.IncrementWanted(0.5f);
                 SetHasFries(false);
                 Instantiate(crumbs, holdPoint.transform.position, holdPoint.transform.rotation);
                 StartCoroutine(angered());
@@ -83,6 +93,7 @@ public class PedestrianController : MonoBehaviour
         AlertIcon.SetActive(true);
         yield return new WaitForSeconds(1);
         AlertIcon.SetActive(false);
+        HostileIcon.SetActive(true);
         hostile = true;
         InvokeRepeating("Chase", 0, 0.2f);
     }
