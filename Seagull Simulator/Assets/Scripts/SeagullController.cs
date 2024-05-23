@@ -7,20 +7,35 @@ using UnityEngine.InputSystem;
 public class SeagullController : MonoBehaviour
 {
     public float speed;
-
     public Rigidbody rb;
+
     private Animator animator;
     private bool inSky;
     private float health;
     private float wantedLevel;
+
+    private float flightCDMax;
+    private float flightCD;
+
+    private bool canTakeDamage = true;
+
     private float movementX;
     private float movementY;
-    private float movementZ;
     private Vector3 direction;
 
     public bool getInSky()
     {
         return inSky;
+    }
+
+    public float getHealth()
+    {
+        return health;
+    }
+
+    public float getFlightCD()
+    {
+        return flightCD;
     }
 
     void Start() {
@@ -29,6 +44,8 @@ public class SeagullController : MonoBehaviour
         inSky = false;
         health = 100f;
         wantedLevel = 0f;
+        flightCDMax = 10;
+        flightCD = flightCDMax;
     }
 
     // Update is called once per frame
@@ -55,8 +72,8 @@ public class SeagullController : MonoBehaviour
     }
 
     void changeStat() {
-        health -= Time.deltaTime * (float) 0.5;
-        wantedLevel -= Time.deltaTime * (float) 0.5;
+        health = Mathf.Max(0, health - Time.deltaTime * (float) 5);
+        wantedLevel -= Time.deltaTime * (float) 5;
 
         if (health <= 0)
         {
@@ -80,11 +97,22 @@ public class SeagullController : MonoBehaviour
     void OnFly(InputValue movementValue) {
         if (inSky) {
             StartCoroutine(descend());
+            StartCoroutine(flightCDTimer());
         }
-        else {
+        else if (flightCD >= flightCDMax) {
             StartCoroutine(takeFlight());
+            flightCD = 0;
         }
         inSky = !inSky;
+    }
+
+    private IEnumerator flightCDTimer()
+    {
+        while (flightCD < flightCDMax)
+        {
+            flightCD += Time.deltaTime;
+            yield return null;
+        }
     }
 
     private IEnumerator takeFlight()
@@ -111,5 +139,25 @@ public class SeagullController : MonoBehaviour
 
         }
         rb.useGravity = true;
+    }
+
+    public void IncrementHealth(float increment)
+    {
+        health = Mathf.Clamp(health + increment, 0, 100);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        if (canTakeDamage)
+        {
+            IncrementHealth(-damage);
+            StartCoroutine(damageTimer());
+        }
+    }
+    private IEnumerator damageTimer()
+    {
+        canTakeDamage = false;
+        yield return new WaitForSeconds(1f);
+        canTakeDamage = true;
     }
 }

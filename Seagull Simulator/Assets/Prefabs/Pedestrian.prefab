@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 8241797517601265066}
   m_Layer: 0
   m_Name: Pedestrian
-  m_TagString: Untagged
+  m_TagString: Pedestrian
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -275,6 +275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 4079778108359078594}
   crumbs: {fileID: 361416063260372814, guid: 2f075b6dcfcdfdd4d8a26a2850b90042, type: 3}
+  attackRange: 1
   walk_Range: 3
 --- !u!65 &8241797517601265066
 BoxCollider:

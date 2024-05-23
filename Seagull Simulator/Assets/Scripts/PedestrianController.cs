@@ -10,6 +10,7 @@ public class PedestrianController : MonoBehaviour
 {
     public NavMeshAgent agent;
     public GameObject crumbs;
+    public float attackRange;
 
     public float walk_Range = 3f;
 
@@ -17,10 +18,17 @@ public class PedestrianController : MonoBehaviour
     private SeagullController seagullController;
     private bool hasFries;
     private bool hostile;
+    private bool canAttack = true;
+
     private float minWaitTime = 2f;
     private float maxWaitTime = 8f;
     private GameObject holdPoint;
     private GameObject AlertIcon;
+
+    public bool getHasFries()
+    {
+        return hasFries;
+    }
 
     public void SetHasFries(bool hasFries)
     {
@@ -42,7 +50,10 @@ public class PedestrianController : MonoBehaviour
 
     private void Update()
     {
-
+        if (hostile && canAttack && Vector3.Magnitude(transform.position - seagull.transform.position) < attackRange)
+        {
+            seagullController.TakeDamage(10);
+        }
     }
 
     private void Chase()
@@ -52,21 +63,28 @@ public class PedestrianController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == seagull && hasFries)
+        if (other.gameObject == seagull)
         {
-            SetHasFries(false);
-            Instantiate(crumbs, holdPoint.transform.position, holdPoint.transform.rotation);
-            SetHostile();
+            Debug.Log("collided");
+            if (hasFries)
+            {
+                seagullController.IncrementHealth(20);
+                SetHasFries(false);
+                Instantiate(crumbs, holdPoint.transform.position, holdPoint.transform.rotation);
+                StartCoroutine(angered());
+            }
         }
     }
 
-    private void SetHostile()
+    private IEnumerator angered()
     {
         CancelInvoke("RandomWalk");
         agent.SetDestination(transform.position);
+        AlertIcon.SetActive(true);
+        yield return new WaitForSeconds(1);
+        AlertIcon.SetActive(false);
         hostile = true;
-        StartCoroutine(FlashIcon());
-        InvokeRepeating("Chase", 1.0f, 0.2f);
+        InvokeRepeating("Chase", 0, 0.2f);
     }
 
     private void RandomWalk()
@@ -77,12 +95,5 @@ public class PedestrianController : MonoBehaviour
         agent.SetDestination(dest);
         float waitTime = UnityEngine.Random.Range(minWaitTime, maxWaitTime);
         Invoke("RandomWalk", waitTime);
-    }
-
-    private IEnumerator FlashIcon()
-    {
-        AlertIcon.SetActive(true);
-        yield return new WaitForSeconds(1);
-        AlertIcon.SetActive(false);
     }
 }
