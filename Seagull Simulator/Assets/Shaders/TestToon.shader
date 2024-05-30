@@ -1,15 +1,23 @@
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Custom/TestToon"
+Shader "Custom/ToonScript"
 {
 Properties
     {
         // we have removed support for texture tiling/offset,
         // so make them not be displayed in material inspector
         [NoScaleOffset] _MainTex ("Texture", 2D) = "white" {}
+        _r_begin_transparent ("Distance to begin transparency", Float) = 2
+        _r_most_transparent ("Distance for max transparency", Float) = 0.5
+        _max_transparent ("Max alpha transparency", Range (0, 1)) = 0.2
     }
     SubShader
     {
+        Tags {
+            "Queue" = "Transparent"
+            "RanderType" = "transparent"
+        }
+        Blend SrcAlpha OneMinusSrcAlpha
         Pass
         {
             CGPROGRAM
@@ -56,7 +64,10 @@ Properties
             }
             
             // texture we will sample
-            sampler2D _MainTex;
+            uniform sampler2D _MainTex;
+            uniform float _r_begin_transparent;
+            uniform float _r_most_transparent;
+            uniform float _max_transparent;
 
             // pixel shader; returns low precision ("fixed4" type)
             // color ("SV_Target" semantic)
@@ -67,9 +78,18 @@ Properties
 
                 float3 V = normalize(_WorldSpaceCameraPos - i.worldPos);
                 float3 N = i.worldNormal;
+                float r = distance(_WorldSpaceCameraPos, i.worldPos);
 
                 if (dot(V, N) < 0.2) {
                     color = float4(0, 0, 0, 1);
+                }
+
+                if (r < _r_begin_transparent) {
+                    if (r < _r_most_transparent) {
+                        color.w = _max_transparent;
+                    }else{
+                        color.w = 1 - (_r_begin_transparent - r) * (1 - _max_transparent) / (_r_begin_transparent - _r_most_transparent);
+                    }
                 }
 
                 return color;
