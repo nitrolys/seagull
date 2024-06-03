@@ -10,7 +10,6 @@ public class PedestrianController : MonoBehaviour
 {
     public NavMeshAgent agent;
     public GameObject crumbs;
-    public float attackRange;
 
     public float walk_Range = 3f;
 
@@ -60,10 +59,6 @@ public class PedestrianController : MonoBehaviour
         {
             StartCoroutine(angered());
         }
-        /*if (hostile && canAttack && Vector3.Magnitude(transform.position - seagull.transform.position) < attackRange)
-        {
-            seagullController.TakeDamage(30);
-        }*/
     }
 
     private void Chase()
@@ -92,9 +87,12 @@ public class PedestrianController : MonoBehaviour
 
     private IEnumerator attackTimer()
     {
+        float speed = agent.speed;
         canAttack = false;
+        agent.speed = 0;
         yield return new WaitForSeconds(0.5f);
         canAttack = true;
+        agent.speed = speed;
     }
 
     private IEnumerator angered()

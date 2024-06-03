@@ -413,6 +413,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5671637318396879657, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1761466318}
+    - targetCorrespondingSourceObject: {fileID: 5671637318396879657, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1761466323}
   m_SourcePrefab: {fileID: 100100000, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
 --- !u!1001 &177577429
 PrefabInstance:
@@ -2143,6 +2146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2.5
   rb: {fileID: 1761466318}
+  mat: {fileID: 2100000, guid: c640a84dfaebbbe4cb1f4f455e177972, type: 2}
 --- !u!114 &1761466313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2200,6 +2204,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!75 &1761466323
+ConstantForce:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761466311}
+  m_Enabled: 1
+  m_Force: {x: 0, y: 0, z: 0}
+  m_RelativeForce: {x: 0, y: 0, z: 0}
+  m_Torque: {x: 0, y: 0, z: 0}
+  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1001 &1835608903
 PrefabInstance:
   m_ObjectHideFlags: 0

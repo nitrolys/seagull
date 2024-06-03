@@ -13,7 +13,6 @@ public class PostEffectController : MonoBehaviour
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         //gameObject.SetActive(false);
-        Debug.Log("called");
         if (postMaterial == null)
             postMaterial = new Material(postShader);
         RenderTexture tmp = RenderTexture.GetTemporary(source.width, source.height, 0, source.format);

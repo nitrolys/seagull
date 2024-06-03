@@ -10,6 +10,7 @@ Properties
         _r_begin_transparent ("Distance to begin transparency", Float) = 2
         _r_most_transparent ("Distance for max transparency", Float) = 0.5
         _max_transparent ("Max alpha transparency", Range (0, 1)) = 0.2
+        _tint ("Tint Color", Color) = (1, 1, 1, 1)
     }
     SubShader
     {
@@ -69,6 +70,7 @@ Properties
             uniform float _r_begin_transparent;
             uniform float _r_most_transparent;
             uniform float _max_transparent;
+            uniform fixed4 _tint;
 
             // pixel shader; returns low precision ("fixed4" type)
             // color ("SV_Target" semantic)
@@ -88,6 +90,8 @@ Properties
 
                 float discreteShade = ceil((diffuseShade + ambientShade) * 2) / 2;
                 color = discreteShade * color;
+
+                color = color * _tint;
 
                 if (r < _r_begin_transparent) {
                     if (r < _r_most_transparent) {

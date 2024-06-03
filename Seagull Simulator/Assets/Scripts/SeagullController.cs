@@ -8,6 +8,7 @@ public class SeagullController : MonoBehaviour
 {
     public float speed;
     public Rigidbody rb;
+    public Material mat;
 
     private Animator animator;
     private bool inSky;
@@ -71,7 +72,8 @@ public class SeagullController : MonoBehaviour
 
     void changePosition() {
         transform.position += speed * new Vector3(movementX, 0, movementY) * Time.deltaTime;
-        transform.rotation = Quaternion.LookRotation(direction);
+        if (direction != Vector3.zero)
+            transform.rotation = Quaternion.LookRotation(direction);
     }
 
     void changeStat() {
@@ -121,6 +123,7 @@ public class SeagullController : MonoBehaviour
     private IEnumerator takeFlight()
     {
         rb.useGravity = false;
+        rb.isKinematic = true;
         while (transform.position.y < 2)
         {
             transform.position += new Vector3(0, 10, 0) * Time.deltaTime;
@@ -141,6 +144,7 @@ public class SeagullController : MonoBehaviour
             }
 
         }
+        rb.isKinematic = false;
         rb.useGravity = true;
     }
 
@@ -156,8 +160,17 @@ public class SeagullController : MonoBehaviour
 
     public void TakeHit(float damage, Vector3 attackerPos)
     {
-        Vector3 hitForce = 8 * Vector3.Normalize(transform.position - attackerPos);
-        rb.AddForce(hitForce, ForceMode.Impulse);
+        Vector3 knockBack = 10 * Vector3.Normalize(transform.position - attackerPos);
+        rb.velocity = knockBack;
         IncrementHealth(-damage);
+        StartCoroutine(flashRed());
+    }
+
+    private IEnumerator flashRed()
+    {
+        Debug.Log("Flash red called");
+        mat.SetColor("_tint", new Color(1, 0, 0, 1));
+        yield return new WaitForSeconds(0.1f);
+        mat.SetColor("_tint", new Color(1, 1, 1, 1));
     }
 }
