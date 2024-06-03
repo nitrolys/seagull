@@ -41,9 +41,9 @@ Shader "Unlit/EdgeFilter"
             float gradient(sampler2D tex, float2 texCoord, float2 texelSize) {
                 float2 uv[2][2];
                 uv[0][0] = texCoord;
-                uv[1][0] = texCoord + 2 * float2(texelSize.x, 0);
-                uv[0][1] = texCoord + 2 * float2(0, texelSize.y);
-                uv[1][1] = texCoord + 2 * texelSize;
+                uv[1][0] = texCoord + float2(texelSize.x, 0);
+                uv[0][1] = texCoord + float2(0, texelSize.y);
+                uv[1][1] = texCoord + texelSize;
 
                 float4 grad_x = tex2D(tex, uv[0][0]) - tex2D(tex, uv[1][1]);
                 float4 grad_y = tex2D(tex, uv[1][0]) - tex2D(tex, uv[0][1]);
@@ -61,7 +61,6 @@ Shader "Unlit/EdgeFilter"
                     return float4(0, 0, 0, 1);
 
                 return color;
-                //return color - gradient(_MainTex, i.uv, _MainTex_TexelSize.xy);
             }
             ENDCG
         }

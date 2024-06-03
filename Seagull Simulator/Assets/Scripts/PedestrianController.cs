@@ -60,10 +60,10 @@ public class PedestrianController : MonoBehaviour
         {
             StartCoroutine(angered());
         }
-        if (hostile && canAttack && Vector3.Magnitude(transform.position - seagull.transform.position) < attackRange)
+        /*if (hostile && canAttack && Vector3.Magnitude(transform.position - seagull.transform.position) < attackRange)
         {
             seagullController.TakeDamage(30);
-        }
+        }*/
     }
 
     private void Chase()
@@ -82,8 +82,19 @@ public class PedestrianController : MonoBehaviour
                 SetHasFries(false);
                 Instantiate(crumbs, holdPoint.transform.position, holdPoint.transform.rotation);
                 StartCoroutine(angered());
+            } else if (hostile && canAttack)
+            {
+                seagullController.TakeHit(30, transform.position);
+                StartCoroutine(attackTimer());
             }
         }
+    }
+
+    private IEnumerator attackTimer()
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(0.5f);
+        canAttack = true;
     }
 
     private IEnumerator angered()

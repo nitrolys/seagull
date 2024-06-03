@@ -17,8 +17,6 @@ public class SeagullController : MonoBehaviour
     private float flightCDMax;
     private float flightCD;
 
-    private bool canTakeDamage = true;
-
     private float movementX;
     private float movementY;
     private Vector3 direction;
@@ -156,18 +154,10 @@ public class SeagullController : MonoBehaviour
         wantedLevel = Mathf.Clamp(wantedLevel + increment, 0, 5);
     }
 
-    public void TakeDamage(float damage)
+    public void TakeHit(float damage, Vector3 attackerPos)
     {
-        if (canTakeDamage)
-        {
-            IncrementHealth(-damage);
-            StartCoroutine(damageTimer());
-        }
-    }
-    private IEnumerator damageTimer()
-    {
-        canTakeDamage = false;
-        yield return new WaitForSeconds(1f);
-        canTakeDamage = true;
+        Vector3 hitForce = 8 * Vector3.Normalize(transform.position - attackerPos);
+        rb.AddForce(hitForce, ForceMode.Impulse);
+        IncrementHealth(-damage);
     }
 }
