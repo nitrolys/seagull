@@ -20,6 +20,7 @@ Properties
         Blend SrcAlpha OneMinusSrcAlpha
         Pass
         {
+
             CGPROGRAM
             // use "vert" function as the vertex shader
             #pragma vertex vert
@@ -78,11 +79,15 @@ Properties
 
                 float3 V = normalize(_WorldSpaceCameraPos - i.worldPos);
                 float3 N = i.worldNormal;
+                float3 L = _WorldSpaceLightPos0.xyz;  // Assumes directional light
                 float r = distance(_WorldSpaceCameraPos, i.worldPos);
 
-                if (dot(V, N) < 0.2) {
-                    color = float4(0, 0, 0, 1);
-                }
+                // Diffuse lighting
+                float diffuseShade = max(dot(N, L), 0);
+                float ambientShade = 0.1;
+
+                float discreteShade = ceil((diffuseShade + ambientShade) * 2) / 2;
+                color = discreteShade * color;
 
                 if (r < _r_begin_transparent) {
                     if (r < _r_most_transparent) {
@@ -90,9 +95,39 @@ Properties
                     }else{
                         color.w = 1 - (_r_begin_transparent - r) * (1 - _max_transparent) / (_r_begin_transparent - _r_most_transparent);
                     }
+                }else{
+                    color.w = 1;
                 }
 
                 return color;
+            }
+            ENDCG
+        }
+
+        Pass
+        {
+            Tags {"LightMode"="ShadowCaster"}
+
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma multi_compile_shadowcaster
+            #include "UnityCG.cginc"
+
+            struct v2f { 
+                V2F_SHADOW_CASTER;
+            };
+
+            v2f vert(appdata_base v)
+            {
+                v2f o;
+                TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
+                return o;
+            }
+
+            float4 frag(v2f i) : SV_Target
+            {
+                SHADOW_CASTER_FRAGMENT(i)
             }
             ENDCG
         }
