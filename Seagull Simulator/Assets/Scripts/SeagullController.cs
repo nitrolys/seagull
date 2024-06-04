@@ -129,6 +129,7 @@ public class SeagullController : MonoBehaviour
             transform.position += new Vector3(0, 10, 0) * Time.deltaTime;
             yield return null;
         }
+        rb.isKinematic = false;
     }
 
     private IEnumerator descend()
@@ -144,7 +145,6 @@ public class SeagullController : MonoBehaviour
             }
 
         }
-        rb.isKinematic = false;
         rb.useGravity = true;
     }
 
