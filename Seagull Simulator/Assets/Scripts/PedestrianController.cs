@@ -74,6 +74,7 @@ public class PedestrianController : MonoBehaviour
             {
                 seagullController.IncrementHealth(20);
                 seagullController.IncrementWanted(0.5f);
+                seagullController.IncrementFries();
                 SetHasFries(false);
                 Instantiate(crumbs, holdPoint.transform.position, holdPoint.transform.rotation);
                 StartCoroutine(angered());

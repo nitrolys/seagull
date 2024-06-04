@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class SeagullController : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class SeagullController : MonoBehaviour
     private float movementX;
     private float movementY;
     private Vector3 direction;
+
+    private int numGotFries;
 
     public bool getInSky()
     {
@@ -50,6 +53,7 @@ public class SeagullController : MonoBehaviour
         wantedLevel = 0f;
         flightCDMax = 5;
         flightCD = flightCDMax;
+        numGotFries = 0;
     }
 
     // Update is called once per frame
@@ -83,8 +87,16 @@ public class SeagullController : MonoBehaviour
         {
             Debug.Log("Game Over: Seagull Died!");
             // Implement Game Over logic
+            StartCoroutine(Death());
+        }
+
+        if (numGotFries >= 10)
+        {
+            Debug.Log("Success: All fries eaten!");
+            StartCoroutine(Win());
         }
     }
+
 
     void OnMove(InputValue movementValue) {
         Vector2 movementVector = movementValue.Get<Vector2>();
@@ -158,6 +170,11 @@ public class SeagullController : MonoBehaviour
         wantedLevel = Mathf.Clamp(wantedLevel + increment, 0, 5);
     }
 
+    public void IncrementFries()
+    {
+        numGotFries += 1;
+    }
+
     public void TakeHit(float damage, Vector3 attackerPos)
     {
         Vector3 knockBack = 10 * Vector3.Normalize(transform.position - attackerPos);
@@ -172,5 +189,20 @@ public class SeagullController : MonoBehaviour
         mat.SetColor("_tint", new Color(1, 0, 0, 1));
         yield return new WaitForSeconds(0.1f);
         mat.SetColor("_tint", new Color(1, 1, 1, 1));
+    }
+
+    private IEnumerator Death()
+    {
+        animator.speed = 0.2f;
+        animator.Play("Death");
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene("GameOver");
+    }
+
+    private IEnumerator Win()
+    {
+        animator.Play("Spin");
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene("WinScene");
     }
 }
