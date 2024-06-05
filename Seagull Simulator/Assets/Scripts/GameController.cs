@@ -12,7 +12,6 @@ public class GameControl : MonoBehaviour
 
     public void EndingGame()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
         Application.Quit();
     }
 }

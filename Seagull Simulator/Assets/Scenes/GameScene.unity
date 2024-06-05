@@ -481,7 +481,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.083333336
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: c3b6c3cc2a4018945b7321fefae7c432, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 81277a21cd3a69646b9db4384af5633d, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &363729799
 Transform:
@@ -994,7 +994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}

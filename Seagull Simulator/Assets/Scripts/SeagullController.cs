@@ -22,6 +22,7 @@ public class SeagullController : MonoBehaviour
     private float movementX;
     private float movementY;
     private Vector3 direction;
+    private bool gameEnded;
 
     private int numGotFries;
 
@@ -54,6 +55,7 @@ public class SeagullController : MonoBehaviour
         flightCDMax = 5;
         flightCD = flightCDMax;
         numGotFries = 0;
+        gameEnded = false;
     }
 
     // Update is called once per frame
@@ -64,13 +66,20 @@ public class SeagullController : MonoBehaviour
     }
 
     void changeAnimation() {
-        if (inSky) {
-            animator.Play("Fly");
-        } else if (movementX != 0 || movementY != 0) {
-            animator.Play("Walk");
-        } else
+        if (! gameEnded)
         {
-            animator.Play("Idle_A");
+            if (inSky)
+            {
+                animator.Play("Fly");
+            }
+            else if (movementX != 0 || movementY != 0)
+            {
+                animator.Play("Walk");
+            }
+            else
+            {
+                animator.Play("Idle_A");
+            }
         }
     }
 
@@ -85,14 +94,12 @@ public class SeagullController : MonoBehaviour
 
         if (health <= 0)
         {
-            Debug.Log("Game Over: Seagull Died!");
             // Implement Game Over logic
             StartCoroutine(Death());
         }
 
         if (numGotFries >= 10)
         {
-            Debug.Log("Success: All fries eaten!");
             StartCoroutine(Win());
         }
     }
@@ -185,7 +192,6 @@ public class SeagullController : MonoBehaviour
 
     private IEnumerator flashRed()
     {
-        Debug.Log("Flash red called");
         mat.SetColor("_tint", new Color(1, 0, 0, 1));
         yield return new WaitForSeconds(0.1f);
         mat.SetColor("_tint", new Color(1, 1, 1, 1));
@@ -193,6 +199,7 @@ public class SeagullController : MonoBehaviour
 
     private IEnumerator Death()
     {
+        gameEnded = true;
         animator.speed = 0.2f;
         animator.Play("Death");
         yield return new WaitForSeconds(2f);
@@ -201,6 +208,7 @@ public class SeagullController : MonoBehaviour
 
     private IEnumerator Win()
     {
+        gameEnded = true;
         animator.Play("Spin");
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene("WinScene");
