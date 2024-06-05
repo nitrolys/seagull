@@ -7,7 +7,7 @@ public class GameControl : MonoBehaviour
 {
     public void StartingGame()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("GameScene");
     }
 
     public void EndingGame()

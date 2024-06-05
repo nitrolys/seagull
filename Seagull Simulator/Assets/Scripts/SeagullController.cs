@@ -14,7 +14,7 @@ public class SeagullController : MonoBehaviour
     private Animator animator;
     private bool inSky;
     private float health;
-    private float wantedLevel;
+    private int firesEaten;
 
     private float flightCDMax;
     private float flightCD;
@@ -40,9 +40,9 @@ public class SeagullController : MonoBehaviour
         return flightCD;
     }
 
-    public int getWantedLevel()
+    public int getFriesEaten()
     {
-        return Mathf.FloorToInt(wantedLevel);
+        return firesEaten;
     }
 
     void Start() {
@@ -50,7 +50,7 @@ public class SeagullController : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         inSky = false;
         health = 100f;
-        wantedLevel = 0f;
+        firesEaten = 0;
         flightCDMax = 5;
         flightCD = flightCDMax;
         numGotFries = 0;
@@ -165,9 +165,9 @@ public class SeagullController : MonoBehaviour
         health = Mathf.Clamp(health + increment, 0, 100);
     }
 
-    public void IncrementWanted(float increment)
+    public void EatFries()
     {
-        wantedLevel = Mathf.Clamp(wantedLevel + increment, 0, 5);
+        firesEaten += 1;
     }
 
     public void IncrementFries()

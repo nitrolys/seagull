@@ -42,7 +42,7 @@ public class PedestrianController : MonoBehaviour
     private void Awake()
     {
         hostile = false;
-        threshold = UnityEngine.Random.Range(1, 5);
+        threshold = UnityEngine.Random.Range(1, 10);
         seagull = GameObject.Find("Seagull");
         seagullController = seagull.GetComponent<SeagullController>();
         AlertIcon = gameObject.transform.Find("AlertIcon").gameObject;
@@ -74,7 +74,7 @@ public class PedestrianController : MonoBehaviour
     private void Update()
     {
         changeAnimation();
-        if (!hostile && !hasFries && seagullController.getWantedLevel() >= threshold)
+        if (!hostile && !hasFries && seagullController.getFriesEaten() >= threshold)
         {
             StartCoroutine(angered());
         }
@@ -92,7 +92,7 @@ public class PedestrianController : MonoBehaviour
             if (hasFries)
             {
                 seagullController.IncrementHealth(20);
-                seagullController.IncrementWanted(0.5f);
+                seagullController.EatFries();
                 seagullController.IncrementFries();
                 SetHasFries(false);
                 Instantiate(crumbs, holdPoint.transform.position, holdPoint.transform.rotation);

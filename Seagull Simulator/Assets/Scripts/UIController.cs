@@ -23,6 +23,6 @@ public class UIController : MonoBehaviour
     {
         healthFill.fillAmount = seagullController.getHealth() / 100;
         CDFill.fillAmount = seagullController.getFlightCD() / 5;
-        wantedDisplay.text = "Wanted level: " + seagullController.getWantedLevel();
+        wantedDisplay.text = "Fries collected: " + seagullController.getFriesEaten() + "/10";
     }
 }
