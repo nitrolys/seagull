@@ -10,6 +10,8 @@ public class PedestrianController : MonoBehaviour
 {
     public NavMeshAgent agent;
     public GameObject crumbs;
+    public Animator animator;
+    public GameObject holdPoint;
 
     public float walk_Range = 3f;
 
@@ -23,7 +25,6 @@ public class PedestrianController : MonoBehaviour
 
     private float minWaitTime = 2f;
     private float maxWaitTime = 8f;
-    private GameObject holdPoint;
     private GameObject AlertIcon;
     private GameObject HostileIcon;
 
@@ -44,7 +45,6 @@ public class PedestrianController : MonoBehaviour
         threshold = UnityEngine.Random.Range(1, 5);
         seagull = GameObject.Find("Seagull");
         seagullController = seagull.GetComponent<SeagullController>();
-        holdPoint = gameObject.transform.Find("HoldPoint").gameObject;
         AlertIcon = gameObject.transform.Find("AlertIcon").gameObject;
         AlertIcon.SetActive(false);
         HostileIcon = gameObject.transform.Find("HostileIcon").gameObject;
@@ -53,8 +53,27 @@ public class PedestrianController : MonoBehaviour
         Invoke("RandomWalk", waitTime);
     }
 
+    void changeAnimation()
+    {
+        if (canAttack == false)
+        {
+            animator.Play("Hit");
+        }else
+        {
+            if (agent.velocity.magnitude == 0)
+            {
+                animator.Play("Idle");
+            }
+            else
+            {
+                animator.Play("Walk");
+            }
+        }
+    }
+
     private void Update()
     {
+        changeAnimation();
         if (!hostile && !hasFries && seagullController.getWantedLevel() >= threshold)
         {
             StartCoroutine(angered());
@@ -79,7 +98,6 @@ public class PedestrianController : MonoBehaviour
                 StartCoroutine(angered());
             } else if (hostile && canAttack)
             {
-                seagullController.TakeHit(30, transform.position);
                 StartCoroutine(attackTimer());
             }
         }
@@ -90,7 +108,9 @@ public class PedestrianController : MonoBehaviour
         float speed = agent.speed;
         canAttack = false;
         agent.speed = 0;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
+        seagullController.TakeHit(30, transform.position);
+        yield return new WaitForSeconds(1f);
         canAttack = true;
         agent.speed = speed;
     }
