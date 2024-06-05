@@ -57,7 +57,7 @@ Shader "Unlit/EdgeFilter"
                 fixed4 color = tex2D(_MainTex, i.uv + _MainTex_TexelSize.xy);
                 
 
-                if (gradient(_MainTex, i.uv, _MainTex_TexelSize.xy) > 0.3)
+                if (gradient(_MainTex, i.uv, _MainTex_TexelSize.xy) > 0.1)
                     return float4(0, 0, 0, 1);
                 return color;
             }

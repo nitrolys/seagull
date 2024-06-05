@@ -88,7 +88,7 @@ Properties
                 float diffuseShade = max(dot(N, L), 0);
                 float ambientShade = 0.1;
 
-                float discreteShade = ceil((diffuseShade + ambientShade) * 2) / 2;
+                float discreteShade = ceil((diffuseShade + ambientShade) * 1.75) / 2;
                 color = discreteShade * color;
 
                 color = color * _tint;
